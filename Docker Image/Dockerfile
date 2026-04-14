@@ -11,7 +11,7 @@ RUN useradd -m docker
 
 # Install necessary packages
 RUN apt install -y --no-install-recommends \
-    curl build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip jq
+    curl build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip jq unzip
 RUN apt-get -yqq install ssh
 # Set up the actions runner
 RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
