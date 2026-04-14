@@ -1,13 +1,14 @@
 version: '3.8'
-
 services:
   runner:
-    image: youssefbrr/github-actions:latest # You can use this image or build your own
+    build:
+      context: "./Docker image"
+      dockerfile: Dockerfile
     restart: always
     environment:
-      - REPO=<owner>/<repo>
-      - REG_TOKEN=<reg-token-for-self-hosted-runner>
-      - NAME=<runner-name>
+      - REPO=florianvsteen/lightweightchart-agent
+      - REG_TOKEN=BNDGSDBO7B6TUNJXV4FX4YTJ32UWG
+      - NAME=FLOWNET-GH-RUNNER
     deploy:
       mode: replicated
       replicas: 2
