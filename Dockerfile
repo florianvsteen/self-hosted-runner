@@ -1,31 +1,38 @@
 FROM ubuntu:24.04
-
 ARG RUNNER_VERSION="2.331.0"
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Update and upgrade the system
-RUN apt update -y && apt upgrade -y
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    curl \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3 \
+    python3-venv \
+    python3-dev \
+    python3-pip \
+    jq \
+    unzip \
+    zip \
+    ssh \
+    git \
+    sudo \
+    wget \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Add a user named docker
-RUN useradd -m docker
+RUN useradd -m docker && usermod -aG sudo docker \
+    && echo "docker ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Install necessary packages
-RUN apt install -y --no-install-recommends \
-    curl build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip jq unzip
-RUN apt-get -yqq install ssh
-# Set up the actions runner
 RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
     && curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
-    && tar xzf actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+    && tar xzf actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
+    && rm actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
 
-# Change ownership to docker user and install dependencies
 RUN chown -R docker /home/docker && /home/docker/actions-runner/bin/installdependencies.sh
 
-# Copy the start script and make it executable
 COPY --chmod=+x start.sh /start.sh
 
-# Switch to docker user
 USER docker
 
-# Define the entrypoint
 ENTRYPOINT ["/start.sh"]
