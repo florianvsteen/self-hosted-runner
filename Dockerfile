@@ -21,6 +21,8 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-r
     ca-certificates \
     gnupg \
     lsb-release \
+    iptables \
+    supervisor \
     && rm -rf /var/lib/apt/lists/*
 
 # Install GitHub CLI
@@ -38,18 +40,19 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Docker CLI (client only — talks to host via mounted socket)
+# Install full Docker Engine (DinD)
 RUN install -m 0755 -d /etc/apt/keyrings \
     && curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
        | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
     && chmod a+r /etc/apt/keyrings/docker.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
        | tee /etc/apt/sources.list.d/docker.list > /dev/null \
-    && apt-get update && apt-get install -y docker-ce-cli \
+    && apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io \
     && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m docker && usermod -aG sudo docker \
-    && echo "docker ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    && echo "docker ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && usermod -aG docker docker
 
 RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
     && curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
