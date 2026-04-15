@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       - REPO=florianvsteen/lightweightchart-agent
-      - REG_TOKEN=BNDGSDBO7B6TUNJXV4FX4YTJ32UWG
+      - REG_TOKEN=BNDGSDGEFLQEMUCCKGW4BKDJ34ZKI
       - NAME=FLOWNET-GH-RUNNER
     deploy:
       mode: replicated
