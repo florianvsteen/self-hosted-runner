@@ -13,7 +13,7 @@ until docker info >/dev/null 2>&1; do
 done
 echo "Docker daemon is running"
 
-cd /home/docker/actions-runner || exit
+cd /home/runner/actions-runner || exit
 ./config.sh --url https://github.com/${REPO} --token ${REG_TOKEN} --name ${NAME}
 
 cleanup() {
