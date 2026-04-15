@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
+    privileged: true
     environment:
       - REPO=florianvsteen/lightweightchart-agent
       - REG_TOKEN=BNDGSDGEFLQEMUCCKGW4BKDJ34ZKI
