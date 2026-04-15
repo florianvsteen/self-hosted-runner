@@ -50,18 +50,19 @@ RUN install -m 0755 -d /etc/apt/keyrings \
     && apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m docker && usermod -aG sudo docker \
-    && echo "docker ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && usermod -aG docker docker
+# Create runner user with sudo and docker access
+RUN useradd -m runner && usermod -aG sudo runner && usermod -aG docker runner \
+    && echo "runner ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
+# Install GitHub Actions Runner
+RUN cd /home/runner && mkdir actions-runner && cd actions-runner \
     && curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
     && tar xzf actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
     && rm actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
 
-RUN chown -R docker /home/docker && /home/docker/actions-runner/bin/installdependencies.sh
+RUN chown -R runner /home/runner && /home/runner/actions-runner/bin/installdependencies.sh
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
-USER docker
+USER runner
 ENTRYPOINT ["/start.sh"]
