@@ -8,7 +8,7 @@ services:
     privileged: true
     environment:
       - REPO=florianvsteen/lightweightchart-agent
-      - REG_TOKEN=BNDGSDGEFLQEMUCCKGW4BKDJ34ZKI
+      - REG_TOKEN=BNDGSDEPUUK5FMEGKJCXHR3J36RVM
       - NAME=FLOWNET-GH-RUNNER
     deploy:
       mode: replicated
