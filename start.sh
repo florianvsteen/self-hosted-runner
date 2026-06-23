@@ -1,8 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-REPO=$REPO
-NAME=${NAME:-$(hostname)}
+# --- Validate required environment variables ---
+: "${REPO:?REPO is required (format: owner/repo)}"
+: "${ACCESS_TOKEN:?ACCESS_TOKEN is required (PAT or GitHub App token with repo + runner admin scope)}"
+NAME="${NAME:-$(hostname)}"
 
 # --- Clean up any stale docker state from a prior run ---
 sudo rm -f /var/run/docker.pid
@@ -28,7 +30,6 @@ done
 cd /home/runner/actions-runner || exit 1
 
 # --- Always fetch a FRESH registration token at runtime ---
-# Requires ACCESS_TOKEN (a PAT or GitHub App token with repo + runner admin scope)
 get_token() {
   curl -sX POST \
     -H "Authorization: Bearer ${ACCESS_TOKEN}" \
@@ -38,6 +39,10 @@ get_token() {
 }
 
 REG_TOKEN=$(get_token)
+if [ -z "${REG_TOKEN}" ] || [ "${REG_TOKEN}" = "null" ]; then
+    echo "Failed to obtain registration token. Check ACCESS_TOKEN scope and REPO."
+    exit 1
+fi
 
 # --- Remove stale config if present, then configure fresh ---
 if [ -f .runner ]; then
