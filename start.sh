@@ -54,7 +54,6 @@ fi
     --url "https://github.com/${REPO}" \
     --token "${REG_TOKEN}" \
     --name "${NAME}" \
-    --ephemeral \
     --unattended \
     --replace
 
