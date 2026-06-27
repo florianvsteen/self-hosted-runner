@@ -53,7 +53,7 @@ fi
 ./config.sh \
     --url "https://github.com/${REPO}" \
     --token "${REG_TOKEN}" \
-    --name "${(hostname)}" \
+    --name "${NAME}" \
     --unattended \
     --replace
 
