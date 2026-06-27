@@ -9,7 +9,6 @@ services:
     environment:
       - REPO=florianvsteen/lightweightchart-agent
       - ACCESS_TOKEN=${ACCESS_TOKEN}
-      - NAME=FLOWNET-GH-RUN
     deploy:
       mode: replicated
       replicas: 4
