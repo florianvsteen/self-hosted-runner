@@ -12,7 +12,7 @@ services:
       - NAME=FLOWNET-GH-RUN
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 4
       #resources:
       #  limits:
       #    cpus: '0.5'
