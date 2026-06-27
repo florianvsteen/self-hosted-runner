@@ -9,6 +9,7 @@ services:
     environment:
       - REPO=florianvsteen/lightweightchart-agent
       - ACCESS_TOKEN=${ACCESS_TOKEN}
+      - NAME="${NAME:-runner}-$(hostname)"
     deploy:
       mode: replicated
       replicas: 4
